@@ -1,12 +1,12 @@
 // tailwind.config.ts
-
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}', // Ensure this line is present
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}', // Ensure all paths are covered
   ],
   theme: {
     extend: {
@@ -62,8 +62,42 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // Add fluid spacing system
+      spacing: {
+        // Using the CSS custom properties defined in globals.css
+        '3xs': 'var(--space-3xs)',
+        '2xs': 'var(--space-2xs)',
+        'xs': 'var(--space-xs)',
+        's': 'var(--space-s)',
+        'm': 'var(--space-m)',
+        'l': 'var(--space-l)',
+        'xl': 'var(--space-xl)',
+        '2xl': 'var(--space-2xl)',
+      },
+      // Add fluid typography
+      fontSize: {
+        'step--1': 'var(--step--1)',
+        'step-0': 'var(--step-0)',
+        'step-1': 'var(--step-1)',
+        'step-2': 'var(--step-2)',
+        'step-3': 'var(--step-3)',
+        'step-4': 'var(--step-4)',
+        'step-5': 'var(--step-5)',
+      },
+      // Add container queries support
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '1.5rem',
+          lg: '2rem',
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/container-queries'),
+  ],
 }
+
 export default config

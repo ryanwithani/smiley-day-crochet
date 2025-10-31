@@ -13,46 +13,54 @@ export function Hero({
   upcomingMarkets 
 }: HeroProps) {
   return (
-    <div className="relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-10 left-10 w-20 h-20 bg-[#E8F5E9] rounded-full opacity-50"></div>
-      <div className="absolute bottom-20 right-20 w-32 h-32 bg-[#F3E5F5] rounded-full opacity-50"></div>
+    <div className="w-full overflow-hidden">
+      {/* Decorative elements with fluid positioning and sizing */}
+      <div className="absolute top-[5%] left-[5%] w-[clamp(3rem,5vw,5rem)] h-[clamp(3rem,5vw,5rem)] bg-[#E8F5E9] rounded-full opacity-50"></div>
+      <div className="absolute bottom-[10%] right-[10%] w-[clamp(4rem,8vw,8rem)] h-[clamp(4rem,8vw,8rem)] bg-[#F3E5F5] rounded-full opacity-50"></div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-0 lg:gap-1 items-center mb-20 lg:mb-24">
-          {/* Site Blurb Text Block - Rotating Card on Left */}
-          <div className="relative z-10 flex justify-center lg:justify-end lg:pr-2">
-            <div className="relative bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border-8 border-white transform rotate-2 hover:rotate-0 transition-transform duration-300 p-8 max-w-lg">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'var(--font-shadows-into-light)' }}>
-                Hi, I'm Cassidy !
-              </h2>
-              <p className="text-lg text-gray-700 leading-relaxed" style={{ fontFamily: 'var(--font-shadows-into-light)' }}>
-                {siteBlurb}
-              </p>
+      {/* Hero section with improved typography */}
+      <section className="py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Hero content with fluid spacing */}
+          <div className="grid lg:grid-cols-2 gap-0 items-center mb-12">
+            {/* Site Blurb Text Block - Using UPDATED hero-text classes for better readability */}
+            <div className="relative z-10 flex justify-center lg:justify-end">
+              <div className="relative bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg border-4 border-white p-6 md:p-8 max-w-lg">
+                {/* Using hero-title class for larger font size */}
+                <h2 className="hero-text hero-title text-balance font-bold text-gray-800 mb-4">
+                  Hi, I'm Cassidy !
+                </h2>
+                {/* Using hero-paragraph class for larger, more readable text */}
+                <p className="hero-text hero-paragraph text-gray-700 text-pretty">
+                  {siteBlurb}
+                </p>
+              </div>
+            </div>
+
+            {/* Logo Image - Static on Right */}
+            <div className="relative z-10 flex justify-center lg:justify-start -ml-4 lg:-ml-6">
+              <Image
+                src="/imageLogo.svg"
+                alt="Smiley Day Crochet Logo"
+                className="w-full max-w-md h-auto object-contain"
+                width={500}
+                height={500}
+                priority
+              />
             </div>
           </div>
-
-          {/* Logo Image - Static on Right */}
-          <div className="relative z-10 flex justify-center lg:justify-start lg:pl-2">
-            <Image
-              src="/imageLogo.svg"
-              alt="Smiley Day Crochet Logo"
-              className="w-full max-w-md h-auto object-contain"
-              width={500}
-              height={500}
-            />
-          </div>
         </div>
-
-      </div>
+      </section>
       
-      {/* Upcoming Markets Component - Full width white background */}
+      {/* Upcoming Markets Component */}
       <UpcomingMarkets markets={upcomingMarkets} />
 
       {/* Products Component */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <Products />
-      </div>
+      <section className="py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <Products />
+        </div>
+      </section>
     </div>
   );
 }

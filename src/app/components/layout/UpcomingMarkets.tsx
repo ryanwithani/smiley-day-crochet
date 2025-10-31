@@ -31,43 +31,45 @@ export function UpcomingMarkets({ markets = [] }: UpcomingMarketsProps) {
   const displayMarkets = markets.length > 0 ? markets : defaultMarkets;
 
   return (
-    <div className="bg-white w-full mt-20 lg:mt-24 pt-16 lg:pt-20 pb-16 lg:pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    // Using a full-width section with updated typography
+    <section className="w-full bg-white py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* FIXED: Consistent heading size with the Shop heading */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
-          <h2 
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#7CB342] mb-0 text-center"
-            style={{ 
-              fontFamily: 'var(--font-dynapuff)',
-            }}
-          >
+          {/* Using section-heading class for consistent styling */}
+          <h2 className="section-heading text-center mb-0">
             Upcoming Markets
           </h2>
           <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Traditional responsive grid with updated typography classes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayMarkets.map((market, index) => (
             <div
               key={index}
               className="bg-white rounded-2xl p-6 shadow-md border border-gray-200 hover:shadow-lg hover:border-[#7CB342] transition-all duration-200"
             >
-              <h3 className="text-xl font-bold text-[#7CB342] mb-3">
+              {/* Using market-title class */}
+              <h3 className="market-title mb-3">
                 {market.name}
               </h3>
               
               <div className="space-y-2">
+                {/* Using market-details class */}
                 <div className="flex items-center space-x-2 text-gray-700">
                   <Calendar className="w-5 h-5 text-[#9C27B0]" />
-                  <span className="text-sm font-medium">{market.date}</span>
+                  <span className="market-details font-medium">{market.date}</span>
                 </div>
                 
                 <div className="flex items-center space-x-2 text-gray-700">
                   <MapPin className="w-5 h-5 text-[#9C27B0]" />
-                  <span className="text-sm">{market.location}</span>
+                  <span className="market-details">{market.location}</span>
                 </div>
                 
                 {market.description && (
-                  <p className="text-sm text-gray-600 mt-3 pt-3 border-t border-[#E8F5E9]">
+                  <p className="text-sm text-gray-600 mt-3 pt-3 border-t border-[#E8F5E9] text-pretty">
                     {market.description}
                   </p>
                 )}
@@ -76,7 +78,6 @@ export function UpcomingMarkets({ markets = [] }: UpcomingMarketsProps) {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
-

@@ -192,21 +192,18 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
   };
 
   return (
-    <div className="mt-20 lg:mt-24">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
-          <h2 
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-0 text-center drop-shadow-lg"
-            style={{ 
-              fontFamily: 'var(--font-dynapuff)',
-              WebkitTextStroke: '3px #7CB342',
-              paintOrder: 'stroke fill',
-            } as React.CSSProperties}
-          >
-            Shop
-          </h2>
-          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
-        </div>
+    <div className="mt-8 md:mt-12">
+      {/* FIXED: Consistent heading style with UpcomingMarkets */}
+      <div className="flex items-center justify-center gap-3 mb-8">
+        <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
+        <h2 
+          className="shop-heading text-center mb-0"
+        >
+          Shop
+        </h2>
+        <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
+      </div>
+
 
         {/* Collection Filter */}
         <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">

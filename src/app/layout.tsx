@@ -1,30 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Shadows_Into_Light, DynaPuff } from "next/font/google";
+// Direct font imports (easier than using next/font)
+// You'll need to install these packages:
+// npm install @fontsource/quicksand @fontsource/outfit @fontsource/shadows-into-light @fontsource/caveat
+import "@fontsource/quicksand/400.css";
+import "@fontsource/quicksand/500.css";
+import "@fontsource/quicksand/600.css";
+import "@fontsource/quicksand/700.css";
+import "@fontsource/outfit/400.css";
+import "@fontsource/outfit/500.css";
+import "@fontsource/outfit/600.css";
+import "@fontsource/outfit/700.css";
+import "@fontsource/shadows-into-light/400.css";
+import "@fontsource/caveat/400.css";
+import "@fontsource/caveat/500.css";
+import "@fontsource/caveat/600.css";
+
 import "./globals.css";
 import { Header } from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const shadowsIntoLight = Shadows_Into_Light({
-  variable: "--font-shadows-into-light",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const dynaPuff = DynaPuff({
-  variable: "--font-dynapuff",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Smiley Day Crochet",
@@ -38,9 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${shadowsIntoLight.variable} ${dynaPuff.variable} bg-gradient-to-br from-[#E1F5FE] via-[#F3E5F5] to-[#FFF9C4] antialiased min-h-screen`}
-      >
+      <body className="bg-gradient-to-br from-[#E1F5FE] via-[#F3E5F5] to-[#FFF9C4] antialiased min-h-screen">
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-grow">

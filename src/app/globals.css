@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Color variables */
   --background: 260 80% 98%; /* A very light purple-white for background */
   --foreground: 265 39% 12%; /* A dark purple for text */
 
@@ -23,13 +24,43 @@
   --input: 0 0% 89.8%;
   --ring: 0 0% 3.9%;
   --radius: 0.75rem;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* Fixed Typography scale - ADJUSTED for readability */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-md: 1.125rem;    /* 18px */
+  --text-lg: 1.25rem;     /* 20px */
+  --text-xl: 1.5rem;      /* 24px */
+  --text-2xl: 2rem;       /* 32px */
+  --text-3xl: 2.5rem;     /* 40px */
+  
+  /* UPDATED: Handwritten text sizes (larger) */
+  --text-handwritten-base: 1.25rem;  /* 20px - increased from 16px */
+  --text-handwritten-lg: 1.625rem;   /* 26px - increased for headers */
+  
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  
+  /* Letter spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  
+  /* Fluid space values for consistent spacing */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,7 +89,173 @@
   }
 }
 
+/* Base typography settings */
 body {
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* Typography Classes with fallback fonts */
+h1, .h1 {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+h2, .h2 {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+h3, .h3 {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+h4, .h4 {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+/* Navigation */
+.nav-link {
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Special Text Elements - UPDATED FOR BETTER READABILITY */
+.hero-text {
+  font-family: 'Shadows Into Light', cursive, sans-serif;
+  line-height: var(--leading-relaxed);
+}
+
+.hero-title {
+  font-size: var(--text-handwritten-lg);
+  font-weight: 700;
+}
+
+.hero-paragraph {
+  font-size: var(--text-handwritten-base);
+}
+
+/* FIXED: Consistent heading sizes */
+.section-heading {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  color: #7CB342; /* Ensure consistent green color */
+}
+
+/* For the Shop heading specifically */
+.shop-heading {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  color: #7CB342; /* Match the green color */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Add shadow for contrast */
+}
+
+.accent-text {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-weight: 500;
+}
+
+.market-title {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-lg);
+  color: #7CB342;
+}
+
+.market-details {
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-base);
+}
+
+/* Buttons */
+.btn {
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+}
+
+.btn-sm {
+  font-size: var(--text-sm);
+}
+
+.btn-md {
+  font-size: var(--text-base);
+}
+
+.btn-lg {
+  font-size: var(--text-md);
+}
+
+/* Product Elements */
+.product-title {
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-lg);
+}
+
+.product-price {
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-lg);
+}
+
+.product-tag {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+/* Modern spacing utility using CSS Grid and flexible gutters */
+.flow-container > * + * {
+  margin-top: var(--space-m);
+}
+
+.flow-container {
+  display: flow-root;
+}
+
+/* Container query classes */
+.container {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 90rem; /* 1440px */
+}
+
+/* Modern text balance and wrapping properties */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
