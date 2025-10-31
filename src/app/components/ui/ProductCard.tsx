@@ -4,7 +4,6 @@ import * as React from "react";
 import { motion } from "framer-motion";
 
 import { cn } from "../../../lib/utils";
-import { Button } from "./button";
 
 // Props interface for type safety and reusability
 interface ProductCardProps {
@@ -12,6 +11,7 @@ interface ProductCardProps {
     price: number;
     currency?: string;
     imageUrl?: string;
+    description?: string;
     colors: string[];
     initialColor: string;
     onAddToCart: (details: { color: string }) => void;
@@ -23,6 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     price,
     currency = "$",
     imageUrl,
+    description,
     colors,
     initialColor,
     onAddToCart,
@@ -40,64 +41,76 @@ const ProductCard: React.FC<ProductCardProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={cn(
-                "w-full max-w-sm rounded-xl border bg-card text-card-foreground shadow-lg p-6",
+                "w-full flex flex-col bg-white text-gray-800 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 overflow-hidden",
                 className
             )}
         >
             {/* Product Image */}
             {imageUrl && (
-                <div className="mb-4">
+                <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
                     <img
                         src={imageUrl}
                         alt={title}
-                        className="w-full h-48 object-cover rounded-lg"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                 </div>
             )}
 
-            {/* Product Header */}
-            <div className="flex items-start justify-between mb-4">
-                <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-                <p className="text-2xl font-semibold text-primary">
-                    {currency}
-                    {price}
-                </p>
-            </div>
-
-            {/* Color Selector */}
-            <div className="mb-6">
-                <label className="text-sm font-medium text-muted-foreground">
-                    Color
-                </label>
-                <div className="flex items-center gap-3 mt-2" role="radiogroup">
-                    {colors.map((color) => (
-                        <motion.button
-                            key={color}
-                            type="button"
-                            onClick={() => setSelectedColor(color)}
-                            style={{ backgroundColor: color }}
-                            className={cn(
-                                "h-8 w-8 rounded-full border-2 transition-transform duration-200",
-                                selectedColor === color
-                                    ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                                    : "border-transparent"
-                            )}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            aria-label={`Select color ${color}`}
-                            role="radio"
-                            aria-checked={selectedColor === color}
-                        />
-                    ))}
+            {/* Product Content - Compact layout for square card */}
+            <div className="flex flex-col flex-grow p-4">
+                {/* Product Header */}
+                <div className="mb-2">
+                    <h2 className="text-base font-semibold text-gray-900 leading-tight mb-1 line-clamp-2">{title}</h2>
+                    <p className="text-lg font-bold text-[#7CB342]">
+                        {currency}{price}
+                    </p>
                 </div>
-            </div>
 
-            {/* Add to Cart Button */}
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button size="lg" className="w-full h-12 text-base" onClick={handleAddToCart}>
+                {/* Product Description - Compact */}
+                {description && (
+                    <div className="mb-3">
+                        <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">{description}</p>
+                    </div>
+                )}
+
+                {/* Color Selector - Compact */}
+                <div className="mb-3">
+                    <label className="text-xs font-medium text-gray-700 mb-1.5 block">
+                        Color
+                    </label>
+                    <div className="flex items-center gap-2 flex-wrap" role="radiogroup">
+                        {colors.map((color) => (
+                            <motion.button
+                                key={color}
+                                type="button"
+                                onClick={() => setSelectedColor(color)}
+                                style={{ backgroundColor: color }}
+                                className={cn(
+                                    "h-7 w-7 rounded-full border-2 transition-all duration-200",
+                                    selectedColor === color
+                                        ? "ring-2 ring-[#9C27B0] ring-offset-1 ring-offset-white border-white scale-110"
+                                        : "border-white hover:scale-110"
+                                )}
+                                whileHover={{ scale: 1.15 }}
+                                whileTap={{ scale: 0.95 }}
+                                aria-label={`Select color ${color}`}
+                                role="radio"
+                                aria-checked={selectedColor === color}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Add to Cart Button */}
+                <motion.button
+                    onClick={handleAddToCart}
+                    className="mt-auto w-full bg-[#7CB342] text-white py-2.5 px-4 rounded-lg font-medium text-sm hover:bg-[#689F38] transition-colors duration-200 shadow-sm hover:shadow"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                >
                     Add to cart
-                </Button>
-            </motion.div>
+                </motion.button>
+            </div>
         </motion.div>
     );
 };
