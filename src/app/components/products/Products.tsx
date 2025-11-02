@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sparkles } from 'lucide-react';
 import { ProductCard } from '../ui/ProductCard';
 import type { Product as ShopifyProduct } from '../../lib/shopify';
 
@@ -27,8 +26,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
   const [shopifyProducts, setShopifyProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Default color options for products (site theme colors)
-  const defaultColors = ['#E1F5FE', '#F3E5F5', '#FFF9C4', '#7CB342', '#9C27B0', '#FFD54F'];
+  // Sunflower-themed color options for products
+  const defaultColors = ['#FFB300', '#FFF3E0', '#FFE082', '#8B4513', '#FFECB3', '#FFC107'];
 
   // Fetch products from Shopify via API route
   useEffect(() => {
@@ -37,12 +36,10 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
         setIsLoading(true);
         console.log('Fetching products from Shopify API route...');
         
-        // Call our API route instead of calling Shopify directly
         const response = await fetch('/api/products');
         const data = await response.json();
         
         if (!response.ok) {
-          // Extract error details from response
           const errorMessage = data.error || 'Unknown error';
           const errorDetails = data.details || data.message || '';
           console.error('API route error:', errorMessage, errorDetails);
@@ -56,19 +53,13 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
           console.warn('No products returned from Shopify API. Check your Shopify credentials and store configuration.');
         }
         
-        // Convert Shopify products to our Product format
         const convertedProducts: Product[] = fetched.map((product: ShopifyProduct) => {
           const imageUrl = product.images.edges[0]?.node.url || '';
           const price = parseFloat(product.priceRange.minVariantPrice.amount);
           const currency = product.priceRange.minVariantPrice.currencyCode;
-          
-          // Extract description (strip HTML if present)
           const description = product.description
             ? product.description.replace(/<[^>]*>/g, '').trim()
             : '';
-          
-          // Extract collection from Shopify product collections
-          // Use the first collection if available, otherwise default to "All Products"
           const collection = product.collections?.edges?.[0]?.node?.title || 'All Products';
           
           return {
@@ -88,8 +79,6 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
         setShopifyProducts(convertedProducts);
       } catch (error) {
         console.error('Error fetching products from Shopify:', error);
-        console.error('Error details:', error);
-        // Keep shopifyProducts as empty array, will fall back to defaults
       } finally {
         setIsLoading(false);
       }
@@ -98,16 +87,15 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
     fetchProducts();
   }, []);
 
-  // Default sample products - only used as fallback if Shopify API fails and no products provided via props
-  // These will be replaced by Shopify API data when available
+  // Default sample products with sunflower-themed colors
   const defaultProducts: Product[] = [
     {
       id: '1',
       title: 'Crochet Blanket - Rainbow',
       price: 85,
       imageUrl: 'https://images.unsplash.com/photo-1624844990139-09948b62a46b?w=400&h=300&fit=crop',
-      colors: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF6B9D'],
-      initialColor: '#FF6B6B',
+      colors: ['#FFB300', '#FFF3E0', '#FFE082', '#FFECB3'],
+      initialColor: '#FFB300',
       collection: 'Home Decor',
     },
     {
@@ -115,8 +103,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
       title: 'Amigurumi Bunny',
       price: 35,
       imageUrl: 'https://images.unsplash.com/photo-1558848862-42854f390454?w=400&h=300&fit=crop',
-      colors: ['#F3E5F5', '#E1F5FE', '#FFF9C4', '#E8F5E9'],
-      initialColor: '#F3E5F5',
+      colors: ['#FFF3E0', '#FFE082', '#FFECB3', '#FFF8E1'],
+      initialColor: '#FFF3E0',
       collection: 'Toys',
     },
     {
@@ -124,8 +112,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
       title: 'Crochet Bag - Floral',
       price: 45,
       imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=300&fit=crop',
-      colors: ['#7CB342', '#9C27B0', '#FFD54F', '#81C784'],
-      initialColor: '#7CB342',
+      colors: ['#FFB300', '#8B4513', '#FFC107', '#FFD54F'],
+      initialColor: '#FFB300',
       collection: 'Accessories',
     },
     {
@@ -133,7 +121,7 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
       title: 'Crochet Scarf - Cozy',
       price: 28,
       imageUrl: 'https://images.unsplash.com/photo-1535888943842-63c1b1b0c3c9?w=400&h=300&fit=crop',
-      colors: ['#FFB74D', '#BA68C8', '#64B5F6', '#81C784'],
+      colors: ['#FFB74D', '#FFC107', '#FFE082', '#FFECB3'],
       initialColor: '#FFB74D',
       collection: 'Accessories',
     },
@@ -142,8 +130,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
       title: 'Crochet Pillow Cover',
       price: 38,
       imageUrl: 'https://images.unsplash.com/photo-1584100936595-3b063dd3e4a3?w=400&h=300&fit=crop',
-      colors: ['#E1F5FE', '#F3E5F5', '#FFF9C4', '#FFE0B2'],
-      initialColor: '#E1F5FE',
+      colors: ['#FFF3E0', '#FFE082', '#FFECB3', '#FFE0B2'],
+      initialColor: '#FFF3E0',
       collection: 'Home Decor',
     },
     {
@@ -157,14 +145,12 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
     },
   ];
 
-  // Use provided products, then Shopify products, then defaults
   const displayProducts = products.length > 0 
     ? products 
     : shopifyProducts.length > 0 
       ? shopifyProducts 
       : defaultProducts;
   
-  // Debug logging
   useEffect(() => {
     console.log('Display products source:', {
       hasPropsProducts: products.length > 0,
@@ -175,35 +161,33 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
     });
   }, [products.length, shopifyProducts.length, displayProducts.length, isLoading]);
   
-  // Get unique collections from products
   const uniqueCollections = collections.length > 0 
     ? collections 
     : Array.from(new Set(displayProducts.map(p => p.collection)));
 
-  // Filter products by selected collection
   const filteredProducts = selectedCollection === 'all'
     ? displayProducts
     : displayProducts.filter(product => product.collection === selectedCollection);
 
   const handleAddToCart = (productId: string, details: { color: string }) => {
     console.log('Added to cart:', { productId, ...details });
-    // Here you would typically add to cart state/context
     alert(`Added to cart!\nColor: ${details.color}`);
   };
 
   return (
-    <div className="mt-8 md:mt-12">
-      {/* FIXED: Consistent heading style with UpcomingMarkets */}
-      <div className="flex items-center justify-center gap-3 mb-8">
-        <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
-        <h2 
-          className="shop-heading text-center mb-0"
-        >
-          Shop
-        </h2>
-        <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#7CB342]" />
-      </div>
-
+    <div className="mt-20 lg:mt-24">
+        <div className="flex items-center justify-center gap-4 mb-10">
+          <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
+          <h2 
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFB300] mb-0 text-center"
+            style={{ 
+              fontFamily: 'var(--font-dynapuff)',
+            }}
+          >
+            Shop
+          </h2>
+          <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
+        </div>
 
         {/* Collection Filter */}
         <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
@@ -211,8 +195,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
             onClick={() => setSelectedCollection('all')}
             className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${
               selectedCollection === 'all'
-                ? 'bg-[#7CB342] text-white shadow-md hover:shadow-lg hover:bg-[#689F38]'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-[#7CB342] hover:text-[#7CB342]'
+                ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
+                : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
             }`}
           >
             All Products
@@ -223,8 +207,8 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
               onClick={() => setSelectedCollection(collection)}
               className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${
                 selectedCollection === collection
-                  ? 'bg-[#9C27B0] text-white shadow-md hover:shadow-lg hover:bg-[#7B1FA2]'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-[#9C27B0] hover:text-[#9C27B0]'
+                  ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
+                  : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
               }`}
             >
               {collection}
@@ -235,7 +219,7 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-lg text-gray-600">Loading products...</p>
+            <p className="text-lg text-[#8B4513]">Loading products...</p>
           </div>
         )}
 
@@ -260,10 +244,9 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
 
         {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-lg text-gray-600">No products found in this collection.</p>
+            <p className="text-lg text-[#8B4513]">No products found in this collection.</p>
           </div>
         )}
     </div>
   );
 }
-
