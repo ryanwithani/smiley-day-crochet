@@ -13,7 +13,6 @@
     "@fontsource/outfit": "^5.2.8",
     "@fontsource/quicksand": "^5.2.10",
     "@fontsource/shadows-into-light": "^5.2.8",
-    "@next/font": "^14.2.15",
     "@radix-ui/react-slot": "^1.2.3",
     "@shopify/storefront-api-client": "^1.0.9",
     "@tailwindcss/cli": "^4.1.16",

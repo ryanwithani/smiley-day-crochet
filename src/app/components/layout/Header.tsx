@@ -1,6 +1,6 @@
 'use client';
 
-import { ShoppingCart, Heart, User, Menu, Search } from 'lucide-react';
+import { ShoppingCart, Menu, Search } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -37,19 +37,13 @@ export function Header() {
             <button className="p-2 hover:bg-[#FFF3E0] rounded-full transition-colors">
               <Search className="w-5 h-5 text-[#8B4513]" />
             </button>
-            <button className="p-2 hover:bg-[#FFE082] rounded-full transition-colors">
-              <Heart className="w-5 h-5 text-[#8B4513]" />
-            </button>
-            <button className="p-2 hover:bg-[#FFF8E1] rounded-full transition-colors">
-              <User className="w-5 h-5 text-[#8B4513]" />
-            </button>
             <button className="p-2 hover:bg-[#FFECB3] rounded-full transition-colors relative">
               <ShoppingCart className="w-5 h-5 text-[#8B4513]" />
               <span className="absolute top-0 right-0 bg-[#FFB300] text-[#6B4423] rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
                 3
               </span>
             </button>
-            <button 
+            <button
               className="md:hidden p-2 hover:bg-[#FFF3E0] rounded-full transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >

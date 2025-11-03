@@ -7,11 +7,16 @@ import type { Product as ShopifyProduct } from '../../lib/shopify';
 export interface Product {
   id: string;
   title: string;
+  handle: string;
   price: number;
   currency?: string;
-  imageUrl?: string;
+  images: {
+    url: string;
+    altText: string;
+  }[];
   description?: string;
   colors: string[];
+  colorNames: string[];
   initialColor: string;
   collection: string;
 }
@@ -21,136 +26,185 @@ interface ProductsProps {
   collections?: string[];
 }
 
+// Cache products in memory to avoid refetching
+let cachedProducts: Product[] | null = null;
+let isFetching = false;
+const fetchPromises: Promise<Product[]>[] = [];
+
+function mapColorNameToHex(colorName: string): string {
+  const colorMap: Record<string, string> = {
+    // Common color names
+    'red': '#FF0000',
+    'blue': '#0000FF',
+    'green': '#00FF00',
+    'yellow': '#FFFF00',
+    'black': '#000000',
+    'white': '#FFFFFF',
+    'pink': '#FFC0CB',
+    'purple': '#800080',
+    'orange': '#FFA500',
+    'brown': '#A52A2A',
+    'gray': '#808080',
+    'grey': '#808080',
+    'beige': '#F5F5DC',
+    'navy': '#000080',
+    'teal': '#008080',
+    'maroon': '#800000',
+    'olive': '#808000',
+    'lime': '#00FF00',
+    'aqua': '#00FFFF',
+    'silver': '#C0C0C0',
+    'gold': '#FFD700',
+
+    // Sunflower-themed colors
+    'sunflower': '#FFB300',
+    'golden': '#FFB300',
+    'cream': '#FFF3E0',
+    'amber': '#FFE082',
+    'chocolate': '#8B4513',
+    'honey': '#FFECB3',
+    'mustard': '#FFC107',
+  };
+
+  // Convert to lowercase and trim
+  const normalized = colorName.toLowerCase().trim();
+
+  // Check if it's already a hex color
+  if (/^#[0-9A-F]{6}$/i.test(colorName)) {
+    return colorName;
+  }
+
+  // Return mapped color or a default
+  return colorMap[normalized] || '#FFB300'; // Default to sunflower yellow
+}
+
 export function Products({ products = [], collections = [] }: ProductsProps) {
   const [selectedCollection, setSelectedCollection] = useState<string>('all');
-  const [shopifyProducts, setShopifyProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [shopifyProducts, setShopifyProducts] = useState<Product[]>(cachedProducts || []);
+  const [isLoading, setIsLoading] = useState(!cachedProducts);
 
-  // Sunflower-themed color options for products
-  const defaultColors = ['#FFB300', '#FFF3E0', '#FFE082', '#8B4513', '#FFECB3', '#FFC107'];
-
-  // Fetch products from Shopify via API route
+  // Fetch products from Shopify via API route with caching
   useEffect(() => {
-    const fetchProducts = async () => {
+    // If we already have cached products, use them immediately
+    if (cachedProducts) {
+      console.log('Using cached products:', cachedProducts.length);
+      setShopifyProducts(cachedProducts);
+      setIsLoading(false);
+      return;
+    }
+
+    // If already fetching, wait for the existing fetch
+    if (isFetching && fetchPromises.length > 0) {
+      console.log('Fetch already in progress, waiting...');
+      fetchPromises[0].then(products => {
+        setShopifyProducts(products);
+        setIsLoading(false);
+      });
+      return;
+    }
+
+    const fetchProducts = async (): Promise<Product[]> => {
       try {
         setIsLoading(true);
+        isFetching = true;
         console.log('Fetching products from Shopify API route...');
-        
+
         const response = await fetch('/api/products');
         const data = await response.json();
-        
+
         if (!response.ok) {
           const errorMessage = data.error || 'Unknown error';
           const errorDetails = data.details || data.message || '';
           console.error('API route error:', errorMessage, errorDetails);
           throw new Error(`${errorMessage}: ${errorDetails}`);
         }
-        
+
         const fetched = data.products || [];
         console.log('Shopify API returned:', fetched.length, 'products');
-        
+
         if (fetched.length === 0) {
           console.warn('No products returned from Shopify API. Check your Shopify credentials and store configuration.');
         }
-        
+
         const convertedProducts: Product[] = fetched.map((product: ShopifyProduct) => {
-          const imageUrl = product.images.edges[0]?.node.url || '';
+          const images = product.images.edges.map(edge => ({
+            url: edge.node.url,
+            altText: edge.node.altText || product.title
+          }));
           const price = parseFloat(product.priceRange.minVariantPrice.amount);
           const currency = product.priceRange.minVariantPrice.currencyCode;
           const description = product.description
             ? product.description.replace(/<[^>]*>/g, '').trim()
             : '';
           const collection = product.collections?.edges?.[0]?.node?.title || 'All Products';
-          
+
+          const colorOption = product.options?.find(
+            (option) => option.name.toLowerCase() === 'color' || option.name.toLowerCase() === 'colour'
+          );
+
+          let productColors: string[] = [];
+          let colorNames: string[] = [];
+
+          if (colorOption && colorOption.values.length > 0) {
+            // Store both color names and hex values
+            colorNames = colorOption.values;
+            productColors = colorOption.values.map(mapColorNameToHex);
+            console.log(`Product "${product.title}" colors:`, colorOption.values, '→', productColors);
+          } else {
+            console.log(`Product "${product.title}" has no color options, using defaults`);
+          }
+
+
           return {
             id: product.id,
             title: product.title,
+            handle: product.handle,
             price,
             currency,
-            imageUrl,
+            images,
             description,
-            colors: defaultColors,
-            initialColor: defaultColors[0],
+            colors: productColors,
+            colorNames,
+            initialColor: productColors[0],
             collection,
           };
         });
-        
+
         console.log('Converted products:', convertedProducts.length);
+
+        // Cache the products for future use
+        cachedProducts = convertedProducts;
         setShopifyProducts(convertedProducts);
+
+        return convertedProducts;
       } catch (error) {
         console.error('Error fetching products from Shopify:', error);
+        return [];
       } finally {
         setIsLoading(false);
+        isFetching = false;
       }
     };
 
-    fetchProducts();
+    const fetchPromise = fetchProducts();
+    fetchPromises.push(fetchPromise);
+
+    fetchPromise.finally(() => {
+      // Clean up promise reference
+      const index = fetchPromises.indexOf(fetchPromise);
+      if (index > -1) {
+        fetchPromises.splice(index, 1);
+      }
+    });
   }, []);
 
-  // Default sample products with sunflower-themed colors
-  const defaultProducts: Product[] = [
-    {
-      id: '1',
-      title: 'Crochet Blanket - Rainbow',
-      price: 85,
-      imageUrl: 'https://images.unsplash.com/photo-1624844990139-09948b62a46b?w=400&h=300&fit=crop',
-      colors: ['#FFB300', '#FFF3E0', '#FFE082', '#FFECB3'],
-      initialColor: '#FFB300',
-      collection: 'Home Decor',
-    },
-    {
-      id: '2',
-      title: 'Amigurumi Bunny',
-      price: 35,
-      imageUrl: 'https://images.unsplash.com/photo-1558848862-42854f390454?w=400&h=300&fit=crop',
-      colors: ['#FFF3E0', '#FFE082', '#FFECB3', '#FFF8E1'],
-      initialColor: '#FFF3E0',
-      collection: 'Toys',
-    },
-    {
-      id: '3',
-      title: 'Crochet Bag - Floral',
-      price: 45,
-      imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=300&fit=crop',
-      colors: ['#FFB300', '#8B4513', '#FFC107', '#FFD54F'],
-      initialColor: '#FFB300',
-      collection: 'Accessories',
-    },
-    {
-      id: '4',
-      title: 'Crochet Scarf - Cozy',
-      price: 28,
-      imageUrl: 'https://images.unsplash.com/photo-1535888943842-63c1b1b0c3c9?w=400&h=300&fit=crop',
-      colors: ['#FFB74D', '#FFC107', '#FFE082', '#FFECB3'],
-      initialColor: '#FFB74D',
-      collection: 'Accessories',
-    },
-    {
-      id: '5',
-      title: 'Crochet Pillow Cover',
-      price: 38,
-      imageUrl: 'https://images.unsplash.com/photo-1584100936595-3b063dd3e4a3?w=400&h=300&fit=crop',
-      colors: ['#FFF3E0', '#FFE082', '#FFECB3', '#FFE0B2'],
-      initialColor: '#FFF3E0',
-      collection: 'Home Decor',
-    },
-    {
-      id: '6',
-      title: 'Amigurumi Bear',
-      price: 32,
-      imageUrl: 'https://images.unsplash.com/photo-1553480047-c4509084d7e2?w=400&h=300&fit=crop',
-      colors: ['#8D6E63', '#A1887F', '#BCAAA4', '#D7CCC8'],
-      initialColor: '#8D6E63',
-      collection: 'Toys',
-    },
-  ];
 
-  const displayProducts = products.length > 0 
-    ? products 
-    : shopifyProducts.length > 0 
-      ? shopifyProducts 
-      : defaultProducts;
-  
+  const displayProducts = products.length > 0
+    ? products
+    : shopifyProducts.length > 0
+      ? shopifyProducts
+      : [];
+
   useEffect(() => {
     console.log('Display products source:', {
       hasPropsProducts: products.length > 0,
@@ -160,9 +214,9 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
       isLoading
     });
   }, [products.length, shopifyProducts.length, displayProducts.length, isLoading]);
-  
-  const uniqueCollections = collections.length > 0 
-    ? collections 
+
+  const uniqueCollections = collections.length > 0
+    ? collections
     : Array.from(new Set(displayProducts.map(p => p.collection)));
 
   const filteredProducts = selectedCollection === 'all'
@@ -176,77 +230,79 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
 
   return (
     <div className="mt-20 lg:mt-24">
-        <div className="flex items-center justify-center gap-4 mb-10">
-          <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
-          <h2 
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFB300] mb-0 text-center"
-            style={{ 
-              fontFamily: 'var(--font-dynapuff)',
-            }}
-          >
-            Shop
-          </h2>
-          <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
-        </div>
+      <div className="flex items-center justify-center gap-4 mb-10">
+        <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
+        <h2
+          className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#FFB300] mb-0 text-center"
+          style={{
+            fontFamily: 'var(--font-dynapuff)',
+          }}
+        >
+          Shop
+        </h2>
+        <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
+      </div>
 
-        {/* Collection Filter */}
-        <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
-          <button
-            onClick={() => setSelectedCollection('all')}
-            className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${
-              selectedCollection === 'all'
-                ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
-                : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
+      {/* Collection Filter */}
+      <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
+        <button
+          onClick={() => setSelectedCollection('all')}
+          className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === 'all'
+            ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
+            : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
             }`}
-          >
-            All Products
-          </button>
-          {uniqueCollections.map((collection) => (
-            <button
-              key={collection}
-              onClick={() => setSelectedCollection(collection)}
-              className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${
-                selectedCollection === collection
-                  ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
-                  : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
+        >
+          All Products
+        </button>
+        {uniqueCollections.map((collection) => (
+          <button
+            key={collection}
+            onClick={() => setSelectedCollection(collection)}
+            className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === collection
+              ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
+              : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
               }`}
-            >
-              {collection}
-            </button>
+          >
+            {collection}
+          </button>
+        ))}
+      </div>
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="text-center py-12">
+          <p className="text-lg text-[#8B4513]">Loading products...</p>
+        </div>
+      )}
+
+      {/* Products Grid */}
+      {!isLoading && filteredProducts.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              productId={product.id}
+              title={product.title}
+              handle={product.handle}
+              price={product.price}
+              currency={product.currency}
+              images={product.images}
+              description={product.description}
+              colors={product.colors}
+              colorNames={product.colorNames}
+              initialColor={product.initialColor}
+              collection={product.collection}
+              onAddToCart={(details) => handleAddToCart(product.id, details)}
+            />
           ))}
         </div>
+      )}
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="text-center py-12">
-            <p className="text-lg text-[#8B4513]">Loading products...</p>
-          </div>
-        )}
-
-        {/* Products Grid */}
-        {!isLoading && filteredProducts.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                title={product.title}
-                price={product.price}
-                currency={product.currency}
-                imageUrl={product.imageUrl}
-                description={product.description}
-                colors={product.colors}
-                initialColor={product.initialColor}
-                onAddToCart={(details) => handleAddToCart(product.id, details)}
-              />
-            ))}
-          </div>
-        )}
-
-        {!isLoading && filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-lg text-[#8B4513]">No products found in this collection.</p>
-          </div>
-        )}
+      {!isLoading && filteredProducts.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-lg text-[#8B4513]">No products found in this collection.</p>
+        </div>
+      )}
     </div>
   );
 }

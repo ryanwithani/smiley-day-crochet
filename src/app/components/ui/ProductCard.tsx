@@ -2,36 +2,65 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 import { cn } from "../../../lib/utils";
 
 interface ProductCardProps {
     title: string;
+    handle: string;
     price: number;
     currency?: string;
-    imageUrl?: string;
+    images: { url: string; altText: string }[];
     description?: string;
     colors: string[];
+    colorNames: string[];
     initialColor: string;
+    collection: string;
+    productId: string;
     onAddToCart: (details: { color: string }) => void;
     className?: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
     title,
+    handle,
     price,
     currency = "$",
-    imageUrl,
+    images,
     description,
     colors,
+    colorNames,
     initialColor,
+    collection,
+    productId,
     onAddToCart,
     className,
 }) => {
+    const router = useRouter();
+    const imageUrl = images[0]?.url;
     const [selectedColor, setSelectedColor] = React.useState(initialColor);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent card click navigation
         onAddToCart({ color: selectedColor });
+    };
+
+    const handleCardClick = () => {
+        // Navigate to product page with clean URL
+        router.push(`/products/${handle}`);
+    };
+
+    // Get currency symbol
+    const getCurrencySymbol = (currencyCode?: string): string => {
+        const symbols: Record<string, string> = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'CAD': '$',
+            'AUD': '$',
+        };
+        return symbols[currencyCode || 'USD'] || '$';
     };
 
     return (
@@ -39,8 +68,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
+            onClick={handleCardClick}
             className={cn(
-                "w-full flex flex-col bg-white text-gray-800 rounded-xl border-2 border-[#FFE082] shadow-sm hover:shadow-lg hover:border-[#FFB300] transition-all duration-200 overflow-hidden",
+                "w-full flex flex-col bg-white text-gray-800 rounded-xl border-2 border-[#FFE082] shadow-sm hover:shadow-lg hover:border-[#FFB300] transition-all duration-200 overflow-hidden cursor-pointer",
                 className
             )}
         >
@@ -61,13 +91,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 <div className="mb-2">
                     <h2 className="text-base font-semibold text-[#6B4423] leading-tight mb-1 line-clamp-2">{title}</h2>
                     <p className="text-lg font-bold text-[#FFB300]">
-                        {currency}{price}
+                        {getCurrencySymbol(currency)}{price.toFixed(2)}
                     </p>
                 </div>
 
                 {/* Product Description */}
                 {description && (
-                    <div className="mb-3">
+                    <div className="mb-3 h-8">
                         <p className="text-xs text-[#8B4513] line-clamp-2 leading-relaxed">{description}</p>
                     </div>
                 )}
@@ -82,12 +112,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
                             <motion.button
                                 key={color}
                                 type="button"
-                                onClick={() => setSelectedColor(color)}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent card click
+                                    setSelectedColor(color);
+                                }}
                                 style={{ backgroundColor: color }}
                                 className={cn(
-                                    "h-7 w-7 rounded-full border-2 transition-all duration-200",
+                                    "h-7 w-7 flex-shrink-0 rounded-full border-2 transition-all duration-200",
                                     selectedColor === color
-                                        ? "ring-2 ring-[#FFB300] ring-offset-1 ring-offset-white border-white scale-110"
+                                        ? "ring-2 ring-[#FFB300] ring-offset-1 ring-offset-white border-white"
                                         : "border-[#FFE082] hover:scale-110 hover:border-[#FFB300]"
                                 )}
                                 whileHover={{ scale: 1.15 }}
