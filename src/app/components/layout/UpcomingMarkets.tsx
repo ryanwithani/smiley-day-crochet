@@ -13,20 +13,17 @@ interface UpcomingMarketsProps {
 
 export function UpcomingMarkets({ markets = [] }: UpcomingMarketsProps) {
   // Only render if we have 2+ markets
-  if (markets.length < 2) {
+  if (markets.length < 1) {
     return null;
   }
 
   return (
-    <div className="bg-white w-full pt-12 lg:pt-16 pb-16 lg:pb-20 border-t-4 border-[#FFB300]">
+    <div className="bg-white w-full pt-12 lg:pt-16 pb-16 lg:pb-20 border-t-4 border-primary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-10">
           <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
           <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#FFB300] mb-0 text-center"
-            style={{
-              fontFamily: 'var(--font-dynapuff)',
-            }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-0 text-center"
           >
             Upcoming Markets
           </h2>
@@ -36,25 +33,25 @@ export function UpcomingMarkets({ markets = [] }: UpcomingMarketsProps) {
           {markets.map((market, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-6 shadow-md border-2 border-[#FFE082] hover:shadow-xl hover:border-[#FFB300] transition-all duration-200"
+              className="bg-white rounded-2xl p-6 shadow-md border-2 border-border hover:shadow-xl hover:border-primary transition-all duration-200"
             >
-              <h3 className="text-xl font-bold text-[#FFB300] mb-3">
+              <h3 className="text-xl font-bold text-primary mb-3">
                 {market.name}
               </h3>
 
               <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-[#6B4423]">
-                  <Calendar className="w-5 h-5 text-[#8B4513]" />
+                <div className="flex items-center space-x-2 text-foreground">
+                  <Calendar className="w-5 h-5 text-secondary" />
                   <span className="text-sm font-medium">{market.date}</span>
                 </div>
 
-                <div className="flex items-center space-x-2 text-[#6B4423]">
-                  <MapPin className="w-5 h-5 text-[#8B4513]" />
+                <div className="flex items-center space-x-2 text-foreground">
+                  <MapPin className="w-5 h-5 text-secondary" />
                   <span className="text-sm">{market.location}</span>
                 </div>
 
                 {market.description && (
-                  <p className="text-sm text-[#6B4423] mt-3 pt-3 border-t border-[#FFE082]">
+                  <p className="text-sm text-foreground mt-3 pt-3 border-t border-border">
                     {market.description}
                   </p>
                 )}

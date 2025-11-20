@@ -223,86 +223,80 @@ export function Products({ products = [], collections = [] }: ProductsProps) {
     ? displayProducts
     : displayProducts.filter(product => product.collection === selectedCollection);
 
-  const handleAddToCart = (productId: string, details: { color: string }) => {
-    console.log('Added to cart:', { productId, ...details });
-    alert(`Added to cart!\nColor: ${details.color}`);
-  };
-
   return (
-    <div className="mt-20 lg:mt-24">
-      <div className="flex items-center justify-center gap-4 mb-10">
-        <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
-        <h2
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#FFB300] mb-0 text-center"
-          style={{
-            fontFamily: 'var(--font-dynapuff)',
-          }}
-        >
-          Shop
-        </h2>
-        <span className="text-5xl sm:text-6xl lg:text-7xl">🌻</span>
-      </div>
+    <section className="relative overflow-hidden py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Shop Header */}
+        <div className="text-center mb-12 lg:mb-16">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-secondary mb-0"
+            >
+              Shop
+            </h2>
+          </div>
+        </div>
 
-      {/* Collection Filter */}
-      <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
-        <button
-          onClick={() => setSelectedCollection('all')}
-          className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === 'all'
-            ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
-            : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
-            }`}
-        >
-          All Products
-        </button>
-        {uniqueCollections.map((collection) => (
+        {/* Collection Filter */}
+        <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
           <button
-            key={collection}
-            onClick={() => setSelectedCollection(collection)}
-            className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === collection
-              ? 'bg-[#FFB300] text-[#6B4423] shadow-md hover:shadow-lg hover:bg-[#FFC107]'
-              : 'bg-white text-[#6B4423] hover:bg-[#FFF3E0] border-2 border-[#FFE082] hover:border-[#FFB300]'
+            onClick={() => setSelectedCollection('all')}
+            className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === 'all'
+              ? 'bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:bg-primary/90'
+              : 'bg-white text-foreground hover:bg-background border-2 border-border hover:border-primary'
               }`}
           >
-            {collection}
+            All Products
           </button>
-        ))}
-      </div>
-
-      {/* Loading State */}
-      {isLoading && (
-        <div className="text-center py-12">
-          <p className="text-lg text-[#8B4513]">Loading products...</p>
-        </div>
-      )}
-
-      {/* Products Grid */}
-      {!isLoading && filteredProducts.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              productId={product.id}
-              title={product.title}
-              handle={product.handle}
-              price={product.price}
-              currency={product.currency}
-              images={product.images}
-              description={product.description}
-              colors={product.colors}
-              colorNames={product.colorNames}
-              initialColor={product.initialColor}
-              collection={product.collection}
-              onAddToCart={(details) => handleAddToCart(product.id, details)}
-            />
+          {uniqueCollections.map((collection) => (
+            <button
+              key={collection}
+              onClick={() => setSelectedCollection(collection)}
+              className={`px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-all duration-200 ${selectedCollection === collection
+                ? 'bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:bg-primary/90'
+                : 'bg-white text-foreground hover:bg-background border-2 border-border hover:border-primary'
+                }`}
+            >
+              {collection}
+            </button>
           ))}
         </div>
-      )}
 
-      {!isLoading && filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-lg text-[#8B4513]">No products found in this collection.</p>
-        </div>
-      )}
-    </div>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-base sm:text-lg text-secondary">Loading products...</p>
+          </div>
+        )}
+
+        {/* Products Grid */}
+        {!isLoading && filteredProducts.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                productId={product.id}
+                title={product.title}
+                handle={product.handle}
+                price={product.price}
+                currency={product.currency}
+                images={product.images}
+                description={product.description}
+                colors={product.colors}
+                colorNames={product.colorNames}
+                initialColor={product.initialColor}
+                collection={product.collection}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-base sm:text-lg text-secondary">No products found in this collection.</p>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

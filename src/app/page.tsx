@@ -1,11 +1,14 @@
 // app/page.tsx
-import { Hero } from "./components/layout/Hero";
+import { ProductHero } from "./components/layout/ProductHero";
+import { Products } from "./components/products/Products";
 
 export default function HomePage() {
   return (
-    // Removed extra container and simplified structure for more fluid layout
-    <div className="flow-container">
-      <Hero />
+    // Single seamless background gradient for entire page
+    <div className="bg-gradient-to-b from-background to-white">
+      <ProductHero />
+      <Products />
     </div>
   );
+
 }

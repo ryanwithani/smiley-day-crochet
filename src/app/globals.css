@@ -1,268 +1,141 @@
 @import "tailwindcss";
 
-:root {
-  --background: 45 100% 96%; /* Warm cream background inspired by sunflower petals */
-  --foreground: 30 40% 20%; /* Warm brown for text (sunflower center) */
+/* ===================================
+   TAILWIND V4 THEME CONFIGURATION
+   =================================== */
 
-  /* shadcn/ui color system - Sunflower theme */
-  --card: 0 0% 100%;
-  --card-foreground: 30 40% 20%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 30 40% 20%;
-  --primary: 45 100% 51%; /* Sunflower yellow #FFB300 */
-  --primary-foreground: 30 40% 20%; /* Dark brown text on yellow */
-  --secondary: 30 50% 35%; /* Sunflower center brown #8B4513 */
-  --secondary-foreground: 45 100% 96%; /* Light cream text on brown */
-  --muted: 45 100% 96%;
-  --muted-foreground: 30 20% 45%;
-  --accent: 45 100% 70%; /* Light golden yellow */
-  --accent-foreground: 30 40% 20%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 45 60% 85%; /* Soft golden border */
-  --input: 45 60% 85%;
-  --ring: 45 100% 51%;
-  --radius: 0.75rem;
+@theme {
+  /* Sunflower Color Palette */
+  --color-sunflower-yellow: #FFB300;
+  --color-sunflower-light: #FFE082;
+  --color-sunflower-cream: #FFF3E0;
+  --color-sunflower-amber: #FFE082;
+  --color-sunflower-brown: #8B4513;
+  --color-sunflower-dark-brown: #6B4423;
 
-  
-  /* Fixed Typography scale - ADJUSTED for readability */
-  --text-xs: 0.75rem;     /* 12px */
-  --text-sm: 0.875rem;    /* 14px */
-  --text-base: 1rem;      /* 16px */
-  --text-md: 1.125rem;    /* 18px */
-  --text-lg: 1.25rem;     /* 20px */
-  --text-xl: 1.5rem;      /* 24px */
-  --text-2xl: 2rem;       /* 32px */
-  --text-3xl: 2.5rem;     /* 40px */
-  
-  /* UPDATED: Handwritten text sizes (larger) */
-  --text-handwritten-base: 1.25rem;  /* 20px - increased from 16px */
-  --text-handwritten-lg: 1.625rem;   /* 26px - increased for headers */
-  
-  /* Line heights */
-  --leading-tight: 1.1;
-  --leading-snug: 1.25;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  
-  /* Letter spacing */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0em;
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
-  
-  /* Fluid space values for consistent spacing */
-  --space-3xs: 0.25rem;
-  --space-2xs: 0.5rem;
-  --space-xs: 0.75rem;
-  --space-s: 1rem;
-  --space-m: 1.5rem;
-  --space-l: 2rem;
-  --space-xl: 3rem;
-  --space-2xl: 4rem;
-}
+  /* Base Theme Colors */
+  --color-background: #FFF3E0;
+  --color-foreground: #6B4423;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 30 30% 12%;
-    --foreground: 45 100% 96%;
+  /* Primary Colors (Sunflower Yellow) */
+  --color-primary: #FFB300;
+  --color-primary-foreground: #6B4423;
+  --color-primary-hover: #FFC107;
 
-    /* shadcn/ui dark mode - warm sunflower tones */
-    --card: 30 25% 15%;
-    --card-foreground: 45 100% 96%;
-    --popover: 30 25% 15%;
-    --popover-foreground: 45 100% 96%;
-    --primary: 45 100% 51%;
-    --primary-foreground: 30 40% 20%;
-    --secondary: 30 40% 25%;
-    --secondary-foreground: 45 100% 96%;
-    --muted: 30 25% 20%;
-    --muted-foreground: 45 60% 60%;
-    --accent: 30 25% 20%;
-    --accent-foreground: 45 100% 96%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 30 25% 25%;
-    --input: 30 25% 25%;
-    --ring: 45 100% 51%;
+  /* Secondary Colors (Brown) */
+  --color-secondary: #8B4513;
+  --color-secondary-foreground: #FFF3E0;
+
+  /* Accent Colors (Light Golden) */
+  --color-accent: #FFE082;
+  --color-accent-foreground: #6B4423;
+
+  /* Muted Colors */
+  --color-muted: #FFF3E0;
+  --color-muted-foreground: #9D7551;
+
+  /* Destructive Colors */
+  --color-destructive: #EF5350;
+  --color-destructive-foreground: #FAFAFA;
+
+  /* Border and Input */
+  --color-border: #F0D5A8;
+  --color-input: #F0D5A8;
+  --color-ring: #FFB300;
+
+  /* Card and Popover */
+  --color-card: #FFFFFF;
+  --color-card-foreground: #6B4423;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #6B4423;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+
+  /* Shadows (Sunflower themed with brown tint) */
+  --shadow-sm: 0 1px 2px 0 rgba(139, 69, 19, 0.05);
+  --shadow: 0 1px 3px 0 rgba(139, 69, 19, 0.1), 0 1px 2px -1px rgba(139, 69, 19, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(139, 69, 19, 0.1), 0 2px 4px -2px rgba(139, 69, 19, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(139, 69, 19, 0.1), 0 4px 6px -4px rgba(139, 69, 19, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(139, 69, 19, 0.1), 0 8px 10px -6px rgba(139, 69, 19, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(139, 69, 19, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(139, 69, 19, 0.05);
+
+  /* Font Family */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+  --animate-slide-down: slideDown 0.5s ease-out;
+
+  /* Animation Keyframes */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ===================================
+   BASE TYPOGRAPHY
+   =================================== */
 
-/* Base typography settings */
 body {
-  color: var(--foreground);
-  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography Classes with fallback fonts */
-h1, .h1 {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: var(--text-2xl);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-h2, .h2 {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: var(--text-xl);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-h3, .h3 {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-}
-
-h4, .h4 {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: var(--text-md);
-  line-height: var(--leading-snug);
-}
-
-/* Navigation */
-.nav-link {
-  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 500;
-  font-size: var(--text-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-/* Special Text Elements - UPDATED FOR BETTER READABILITY */
-.hero-text {
-  font-family: 'Shadows Into Light', cursive, sans-serif;
-  line-height: var(--leading-relaxed);
-}
-
-.hero-title {
-  font-size: var(--text-handwritten-lg);
-  font-weight: 700;
-}
-
-.hero-paragraph {
-  font-size: var(--text-handwritten-base);
-}
-
-/* FIXED: Consistent heading sizes */
-.section-heading {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: var(--text-2xl);
-  color: #7CB342; /* Ensure consistent green color */
-}
-
-/* For the Shop heading specifically */
-.shop-heading {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: var(--text-2xl);
-  color: #7CB342; /* Match the green color */
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Add shadow for contrast */
-}
-
-.accent-text {
-  font-family: 'Caveat', cursive, sans-serif;
-  font-weight: 500;
-}
-
-.market-title {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: var(--text-lg);
-  color: #7CB342;
-}
-
-.market-details {
-  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 500;
-  font-size: var(--text-base);
-}
-
-/* Buttons */
-.btn {
-  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-}
-
-.btn-sm {
-  font-size: var(--text-sm);
-}
-
-.btn-md {
-  font-size: var(--text-base);
-}
-
-.btn-lg {
-  font-size: var(--text-md);
-}
-
-/* Product Elements */
-.product-title {
-  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 600;
-  font-size: var(--text-lg);
-}
-
-.product-price {
-  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: var(--text-lg);
-}
-
-.product-tag {
-  font-family: 'Caveat', cursive, sans-serif;
-  font-weight: 500;
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-}
-
-/* Modern spacing utility using CSS Grid and flexible gutters */
-.flow-container > * + * {
-  margin-top: var(--space-m);
-}
-
-.flow-container {
-  display: flow-root;
-}
-
-/* Container query classes */
-.container {
-  width: 100%;
-  margin-inline: auto;
-  max-width: 90rem; /* 1440px */
-}
-
-/* Modern text balance and wrapping properties */
-.text-balance {
-  text-wrap: balance;
-}
-
-.text-pretty {
-  text-wrap: pretty;
-}
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
 
 /* Support for reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }

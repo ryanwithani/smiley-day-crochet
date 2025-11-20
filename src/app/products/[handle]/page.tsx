@@ -196,7 +196,7 @@ export default function ProductDetailPage() {
         return (
             <div className="container mx-auto px-4 py-12">
                 <div className="flex items-center justify-center min-h-[60vh]">
-                    <p className="text-lg text-[#8B4513]">Loading product...</p>
+                    <p className="text-lg text-secondary">Loading product...</p>
                 </div>
             </div>
         );
@@ -207,10 +207,10 @@ export default function ProductDetailPage() {
         return (
             <div className="container mx-auto px-4 py-12">
                 <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-                    <p className="text-lg text-[#8B4513]">Product not found</p>
+                    <p className="text-lg text-secondary">Product not found</p>
                     <Link
                         href="/"
-                        className="px-6 py-3 bg-[#FFB300] text-[#6B4423] rounded-lg font-bold hover:bg-[#FFC107] transition-colors"
+                        className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors"
                     >
                         Back to Shop
                     </Link>
@@ -223,20 +223,20 @@ export default function ProductDetailPage() {
         <div className="container mx-auto px-4 py-8 lg:py-12">
             {/* Breadcrumb Navigation */}
             <nav className="mb-6 lg:mb-8">
-                <ol className="flex items-center gap-2 text-sm text-[#8B4513]">
+                <ol className="flex items-center gap-2 text-sm text-secondary">
                     <li>
-                        <Link href="/" className="hover:text-[#FFB300] transition-colors">
+                        <Link href="/" className="hover:text-primary transition-colors">
                             Home
                         </Link>
                     </li>
                     <li>/</li>
                     <li>
-                        <Link href="/#shop" className="hover:text-[#FFB300] transition-colors">
+                        <Link href="/#shop" className="hover:text-primary transition-colors">
                             Shop
                         </Link>
                     </li>
                     <li>/</li>
-                    <li className="text-[#6B4423] font-medium">{product.title}</li>
+                    <li className="text-foreground font-medium">{product.title}</li>
                 </ol>
             </nav>
 
@@ -250,7 +250,7 @@ export default function ProductDetailPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="aspect-square w-full rounded-xl overflow-hidden bg-[#FFF8E1] border-2 border-[#FFE082]"
+                        className="aspect-square w-full rounded-xl overflow-hidden bg-background border-2 border-border"
                     >
                         {product.images && product.images.length > 0 ? (
                             <img
@@ -259,7 +259,7 @@ export default function ProductDetailPage() {
                                 className="w-full h-full object-cover"
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[#8B4513]">
+                            <div className="w-full h-full flex items-center justify-center text-secondary">
                                 No image available
                             </div>
                         )}
@@ -273,8 +273,8 @@ export default function ProductDetailPage() {
                                     key={index}
                                     onClick={() => setSelectedImage(index)}
                                     className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index
-                                        ? 'border-[#FFB300] ring-2 ring-[#FFB300] ring-offset-2'
-                                        : 'border-[#FFE082] hover:border-[#FFB300]'
+                                        ? 'ring-2 ring-primary ring-offset-2 border-primary'
+                                        : 'border-border hover:scale-110 hover:border-primary'
                                         }`}
                                 >
                                     <img
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
                     {/* Collection Badge */}
                     {product.collection && (
                         <div className="inline-block">
-                            <span className="px-4 py-1.5 bg-[#FFF3E0] text-[#8B4513] text-sm font-medium rounded-full border border-[#FFE082]">
+                            <span className="px-4 py-1.5 bg-background text-secondary text-sm font-medium rounded-full border border-border">
                                 {product.collection}
                             </span>
                         </div>
@@ -302,12 +302,11 @@ export default function ProductDetailPage() {
                     {/* Title and Price */}
                     <div>
                         <h1
-                            className="text-3xl lg:text-4xl font-bold text-[#6B4423] mb-3"
-                            style={{ fontFamily: 'var(--font-dynapuff)' }}
+                            className="text-3xl lg:text-4xl font-bold text-foreground mb-3"
                         >
                             {product.title}
                         </h1>
-                        <p className="text-3xl font-bold text-[#FFB300]">
+                        <p className="text-3xl font-bold text-primary">
                             {getCurrencySymbol(product.currency)}{product.price.toFixed(2)}
                         </p>
                     </div>
@@ -315,7 +314,7 @@ export default function ProductDetailPage() {
                     {/* Description */}
                     {product.description && (
                         <div className="prose prose-sm max-w-none">
-                            <p className="text-[#8B4513] leading-relaxed">
+                            <p className="text-secondary leading-relaxed">
                                 {product.description}
                             </p>
                         </div>
@@ -324,8 +323,8 @@ export default function ProductDetailPage() {
                     {/* Color Selector */}
                     {product.colors && product.colors.length > 0 && (
                         <div className="space-y-3">
-                            <label className="text-sm font-semibold text-[#6B4423] block">
-                                Color: <span className="font-normal text-[#8B4513]">{selectedColorName}</span>
+                            <label className="text-sm font-semibold text-foreground block">
+                                Color: <span className="font-normal text-secondary">{selectedColorName}</span>
                             </label>
                             <div className="flex items-center gap-3 flex-wrap">
                                 {product.colors.map((color, index) => (
@@ -338,8 +337,8 @@ export default function ProductDetailPage() {
                                         }}
                                         style={{ backgroundColor: color }}
                                         className={`h-10 w-10 rounded-full border-2 transition-all ${selectedColor === color
-                                            ? 'ring-2 ring-[#FFB300] ring-offset-2 border-white scale-110'
-                                            : 'border-[#FFE082] hover:scale-110 hover:border-[#FFB300]'
+                                            ? 'ring-2 ring-primary ring-offset-2 border-white scale-110'
+                                            : 'border-border hover:scale-110 hover:border-primary'
                                             }`}
                                         whileHover={{ scale: 1.15 }}
                                         whileTap={{ scale: 0.95 }}
@@ -352,24 +351,24 @@ export default function ProductDetailPage() {
 
                     {/* Quantity Selector */}
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-[#6B4423] block">
+                        <label className="text-sm font-semibold text-foreground block">
                             Quantity
                         </label>
                         <div className="flex items-center gap-4">
-                            <div className="flex items-center border-2 border-[#FFE082] rounded-lg overflow-hidden">
+                            <div className="flex items-center border-2 border-border rounded-lg overflow-hidden">
                                 <button
                                     onClick={() => handleQuantityChange(-1)}
-                                    className="px-4 py-2 bg-white hover:bg-[#FFF3E0] text-[#6B4423] font-bold transition-colors"
+                                    className="px-4 py-2 bg-white hover:bg-background text-foreground font-bold transition-colors"
                                     aria-label="Decrease quantity"
                                 >
                                     -
                                 </button>
-                                <span className="px-6 py-2 bg-white text-[#6B4423] font-semibold min-w-[60px] text-center">
+                                <span className="px-6 py-2 bg-white text-foreground font-semibold min-w-[60px] text-center">
                                     {quantity}
                                 </span>
                                 <button
                                     onClick={() => handleQuantityChange(1)}
-                                    className="px-4 py-2 bg-white hover:bg-[#FFF3E0] text-[#6B4423] font-bold transition-colors"
+                                    className="px-4 py-2 bg-white hover:bg-background text-foreground font-bold transition-colors"
                                     aria-label="Increase quantity"
                                 >
                                     +
@@ -381,7 +380,7 @@ export default function ProductDetailPage() {
                     {/* Add to Cart Button */}
                     <motion.button
                         onClick={handleAddToCart}
-                        className="w-full bg-[#FFB300] text-[#6B4423] py-4 px-6 rounded-lg font-bold text-lg hover:bg-[#FFC107] transition-colors shadow-md hover:shadow-lg"
+                        className="w-full bg-primary text-primary-foreground py-4 px-6 rounded-lg font-bold text-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
@@ -391,7 +390,7 @@ export default function ProductDetailPage() {
                     {/* Back to Shop Link */}
                     <Link
                         href="/#shop"
-                        className="block text-center text-[#8B4513] hover:text-[#FFB300] transition-colors underline"
+                        className="block text-center text-secondary hover:text-primary transition-colors underline"
                     >
                         ← Continue Shopping
                     </Link>

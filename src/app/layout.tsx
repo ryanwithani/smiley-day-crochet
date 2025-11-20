@@ -1,35 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Shadows_Into_Light, DynaPuff, Quicksand } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import { Footer } from "./components/layout/Footer";
+import { CartDrawer } from "./components/cart/CartDrawer";
+import { ToastContainer } from "./components/ui/Toast";
+import { MarketAnnouncementBar } from "./components/layout/MarketAnnouncement";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const shadowsIntoLight = Shadows_Into_Light({
-  variable: "--font-shadows-into-light",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const dynaPuff = DynaPuff({
-  variable: "--font-dynapuff",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const quicksand = Quicksand({
-  variable: "--font-quicksand",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Configure Inter for all text
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -42,16 +25,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const market = {
+    name: "Deck the Stalls Christmas Market",
+    date: "November 21st-23rd",
+    location: "The Barn at Homestead, Moss Point, MS",
+  };
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${shadowsIntoLight.variable} ${dynaPuff.variable} ${quicksand.variable} bg-gradient-to-br from-[#FFF8E1] via-[#FFF3E0] to-[#FFECB3] antialiased min-h-screen`}
+        className={`${inter.variable} bg-linear-to-br from-[#FFF8E1] via-[#FFF3E0] to-[#FFECB3] antialiased min-h-screen`}
       >
+        <ToastContainer />
+        <CartDrawer />
         <div className="flex flex-col min-h-screen">
+          <MarketAnnouncementBar
+            market={market}
+            backgroundColor="#E74C3C"
+            textColor="#FFFFFF"
+          />
           <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
+          <main className="grow">{children}</main>
           <Footer />
         </div>
       </body>
